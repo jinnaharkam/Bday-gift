@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday</title>
+<style>
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  text-align:center;
+  overflow:hidden;
+}
+.container{
+  padding:20px;
+}
+
+h1{
+  font-size:3rem;
+  color:#fff;
+}
+
+p{
+  font-size:1.2rem;
+  color:#fff;
+}
+
+button{
+  margin-top:20px;
+  padding:12px 20px;
+  border:none;
+  border-radius:25px;
+  background:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+
+@media(max-width:600px){
+  h1{font-size:2.2rem}
+  p{font-size:1rem}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="container">
+<h1>🎉 Happy Birthday! 🎂</h1>
+<p>Wishing you a day filled with happiness, laughter, and lots of cake!</p>
+<button onclick="startConfetti()">Celebrate 🎊</button>
+</div>
+
+<script>
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let pieces=[];
+
+function random(min,max){
+ return Math.random()*(max-min)+min;
+}
+
+function createPieces(){
+ pieces=[];
+ for(let i=0;i<150;i++){
+  pieces.push({
+   x:random(0,canvas.width),
+   y:random(-canvas.height,0),
+   size:random(5,10),
+   speed:random(2,5),
+   angle:random(0,360)
+  });
+ }
+}
+
+function draw(){
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ pieces.forEach(p=>{
+  ctx.beginPath();
+  ctx.rect(p.x,p.y,p.size,p.size);
+  ctx.fillStyle=`hsl(${p.angle},80%,60%)`;
+  ctx.fill();
+
+  p.y+=p.speed;
+  if(p.y>canvas.height){
+    p.y=0;
+  }
+ });
+ requestAnimationFrame(draw);
+}
+
+function startConfetti(){
+ createPieces();
+ draw();
+}
+
+window.addEventListener("resize",()=>{
+ canvas.width=window.innerWidth;
+ canvas.height=window.innerHeight;
+});
+</script>
+</body>
+</html>
