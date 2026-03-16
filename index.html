@@ -18,6 +18,7 @@ body {
 }
 .container {
   padding: 20px;
+  max-width: 600px;
 }
 h1 {
   font-size: 3rem;
@@ -26,6 +27,7 @@ h1 {
 p {
   font-size: 1.2rem;
   color: #fff;
+  min-height: 2em;
 }
 button {
   margin-top: 20px;
@@ -42,6 +44,41 @@ canvas {
   left: 0;
   pointer-events: none;
 }
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+.gallery img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.gallery img:hover { transform: scale(1.1); }
+#giftBox {
+  width: 150px;
+  height: 150px;
+  background: #ff6f61;
+  border-radius: 15px;
+  margin: 20px auto;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+#giftLid {
+  width: 150px;
+  height: 50px;
+  background: #ff3b2f;
+  position: absolute;
+  top: 0;
+  border-radius: 15px 15px 0 0;
+  transition: top 0.5s;
+}
 @media(max-width: 600px) {
   h1 { font-size: 2.2rem; }
   p { font-size: 1rem; }
@@ -50,12 +87,27 @@ canvas {
 </head>
 <body>
 <canvas id="confetti"></canvas>
+<audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" autoplay loop></audio>
 <div class="container">
-  <h1>💖 Happy Anniversary! 💕</h1>
-  <p>Wishing you both endless love, laughter, and happiness together.</p>
+  <input type="text" id="nameInput" placeholder="Enter Name" style="padding:10px; border-radius:5px; margin-bottom:10px;">
+  <button onclick="updateName()">Set Name</button>
+  <h1 id="greeting">💖 Happy Anniversary! 💕</h1>
+  <p id="typingMessage"></p>
   <button onclick="startConfetti()">Celebrate 🎊</button>
+
+  <div id="giftBox" onclick="openGift()">
+    <div id="giftLid"></div>
+  </div>
+
+  <div class="gallery">
+    <img src="https://via.placeholder.com/100?text=Mem1" alt="Memory 1">
+    <img src="https://via.placeholder.com/100?text=Mem2" alt="Memory 2">
+    <img src="https://via.placeholder.com/100?text=Mem3" alt="Memory 3">
+    <img src="https://via.placeholder.com/100?text=Mem4" alt="Memory 4">
+  </div>
 </div>
 <script>
+// Confetti setup
 const canvas = document.getElementById("confetti");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -81,10 +133,32 @@ function draw() {
   requestAnimationFrame(draw);
 }
 function startConfetti(){ createPieces(); draw(); }
-window.addEventListener("resize", ()=>{
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
+window.addEventListener("resize", ()=>{ canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+// Name customization
+function updateName(){
+  const name = document.getElementById('nameInput').value;
+  if(name) document.getElementById('greeting').textContent = `💖 Happy Anniversary ${name}! 💕`;
+}
+
+// Typing message animation
+const message = "Wishing you both endless love, laughter, and happiness together.";
+let i = 0;
+function typeMessage(){
+  if(i < message.length){
+    document.getElementById('typingMessage').textContent += message.charAt(i);
+    i++;
+    setTimeout(typeMessage, 50);
+  }
+}
+window.onload = typeMessage;
+
+// Gift box animation
+function openGift(){
+  const lid = document.getElementById('giftLid');
+  lid.style.top = '-60px';
+  startConfetti();
+}
 </script>
 </body>
 </html>
